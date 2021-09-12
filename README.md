@@ -17,4 +17,12 @@
  ![title](https://github.com/uvehj/VNonograms/blob/main/resources/images/header.png)
  
  VNonograms Infinite autogenerates nonogram puzzles you can solve
+
+You can play the game on the browser or download it for Windows/Linux/Mac/RaspberryPi over at the Itch.io page
+
+https://uvehj.itch.io/vnonograms-infinite
+
+Or alternatively you can load the cartridge into Pico8
+
+![Cartridge](https://github.com/uvehj/VNonograms/blob/main/cartridges/images/vnonogramsinfinite.p8.png)
  
