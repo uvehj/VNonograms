@@ -109,7 +109,7 @@ function create_puzzle(size)
     --local xnum = puzzle.x - #row * 6
     puzzle.pixelsize = {puzzle.longestrow*6+puzzle.width*8,1+puzzle.longestcolumn+puzzle.height*8}
     puzzle.x = 68-(puzzle.pixelsize[1]/2)+(puzzle.longestrow*5)
-    puzzle.y = 58-(puzzle.pixelsize[2]/2)+(puzzle.longestcolumn*2)
+    puzzle.y = 54-(puzzle.pixelsize[2]/2)+(puzzle.longestcolumn*6)
 
     if puzzle.pixelsize[1] > 128 or puzzle.pixelsize[2] > 100 then
         return -1
