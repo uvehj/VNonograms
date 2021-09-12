@@ -7,6 +7,7 @@ puzzle = {}
 state = 0
 cursorpos = {0,0}
 selectedsize = {7,5}
+checkcounter = 30
 function _init()
     state = 0
 end
@@ -30,7 +31,11 @@ function _update60()
         state = create_puzzle(selectedsize)
     elseif state == 1 then
         update_buttons_game()
-        state = check_finished_and_autocomplete()
+        checkcounter -= 1
+        if checkcounter <= 0 then
+            state = check_finished_and_autocomplete()
+            checkcounter = 30
+        end
     elseif state == 0 then
         update_buttons_menu()
     elseif state == 2 then
