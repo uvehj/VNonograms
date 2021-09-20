@@ -28,3 +28,5 @@ Sprite mascot: create_puzzle({40,25},{54,0},{59,6})
 
 Hand and stamp: create_puzzle({20,25},{30,10},{42,20})
 
+code and sprite logos: create_puzzle({31,30},{60,0},{71,7})
+
