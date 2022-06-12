@@ -26,3 +26,15 @@ Or alternatively you can load the cartridge into Pico8
 
 ![Cartridge](https://github.com/uvehj/VNonograms/blob/main/cartridges/images/vnonogramsinfinite.p8.png)
  
+ ## VNonograms: Pico-8 Legends
+ ![title](https://github.com/uvehj/VNonograms/blob/main/resources/images/header2.png)
+ 
+ VNonograms: Pico-8 Legends is a nonogram puzzle game celebrating the Pico-8. Featuring pixel art from the Pico-8 ecosystem and community.
+
+You can play the game on the browser or download it for Windows/Linux/Mac/RaspberryPi over at the Itch.io page
+
+https://uvehj.itch.io/vnonograms-pico-8-legends
+
+Or alternatively you can load the cartridge into Pico8
+
+![Cartridge](https://github.com/uvehj/VNonograms/blob/main/cartridges/images/vnonogramspico8.p8.png)
