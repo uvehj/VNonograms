@@ -22,5 +22,5 @@ PICO-8 pack puzzle info
 20. Hand and stamp: create_puzzle({20,25},{30,10},{42,20})
 21. Jelpi creatures: create_puzzle({25,30},{10,21},{21,29})
 22. 2020 Christmas Deer: create_puzzle({25,30},{72,0},{82,10})
-23. Zep avatar: create_puzzle({30,40},{0,6},{12,15})
+23. Zep avatar: create_puzzle({20,40},{0,6},{12,15})
 24. V Logo: create_puzzle({30,30},{0,0},{6,5})

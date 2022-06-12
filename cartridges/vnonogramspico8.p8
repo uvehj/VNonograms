@@ -426,6 +426,7 @@ function check_finished_and_autocomplete()
 end
 
 function load_level(levelnum)
+    cursorpos = {0,0}
     if levelnum == 2 then
         return create_puzzle({40,40},{7,0},{13,4})
     elseif levelnum == 3 then
@@ -469,7 +470,7 @@ function load_level(levelnum)
     elseif levelnum == 22 then
         return create_puzzle({25,30},{72,0},{82,10})
     elseif levelnum == 23 then
-        return create_puzzle({30,40},{0,6},{12,15})
+        return create_puzzle({20,40},{0,6},{12,15})
     elseif levelnum == 24 then
         return create_puzzle({30,30},{0,0},{6,5})
     else
