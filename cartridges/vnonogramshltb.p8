@@ -4,6 +4,7 @@ __lua__
 --nonograms celebrating pico8
 --by uvehj
 puzzle = {}
+menustate = 1
 state = 0
 cursorpos = {0,0}
 selectedsize = {7,5}
@@ -144,59 +145,68 @@ function draw_creation_error()
     print("press any button to go back",1,70,0)
 end
 function draw_title()
-    --"nonograms" letter
-    sspr(0,8,8,8,67,32,8*3,8*3,false,false)
-    sspr(0,8,8,8,67+8*3,32,8*3,8*3,false,false)
-    sspr(8,8,8*3,8,67,50,8*3*3,8*3,false,false)
-    --line break
-    rectfill(66+8*2*3,32+5,66+8*2*3+8,32+7,7)
-    --numbers for the fake nonogram
-    local titlerows = {"33","11","21","11","11"," 1"}
-    local y = 15
-    for row in all(titlerows) do
-        print(row,1,y,7)
-        y += 8
+    if menustate == 1 then
+        --"nonograms" letter
+        sspr(0,8,8,8,67,32,8*3,8*3,false,false)
+        sspr(0,8,8,8,67+8*3,32,8*3,8*3,false,false)
+        sspr(8,8,8*3,8,67,50,8*3*3,8*3,false,false)
+        --line break
+        rectfill(66+8*2*3,32+5,66+8*2*3+8,32+7,7)
+        --numbers for the fake nonogram
+        local titlerows = {"33","11","21","11","11"," 1"}
+        local y = 15
+        for row in all(titlerows) do
+            print(row,1,y,7)
+            y += 8
+        end
+        print("1   1   1\n1 3 2 1 1 5 1",11,1)
+        --fake nonogram
+        rectfill(9,13,9+7*8,13+6*8,5)
+        map(0,0,9,13,7,6)
+        --subtitle
+        print_subtitle(70,"hltb")
+        print_subtitle(80,"the unofficial")
+        print_subtitle(88,"motionless")
+        print_subtitle(96,"picture")
+        print_subtitle(106,"the official")
+        print_subtitle(114,"game")
+
+        print("by uvehj",96,122,7)
+
+    else
+        local l = 1
+        x = 10
+        y = 85
+        while l <= totalpuzzles do
+            if l == currentpuzzle then
+                print("\23",x-5,y,7)
+            end;
+            if wins[l] == 1 then
+                print("\146",x+8,y,7)
+            elseif wins[l] == 2 then
+                print("\146",x+8,y,9)
+            end
+            print(l,x,y,7)
+            l += 1
+            y += 7
+            if y > 110 then
+                x += 20
+                y = 85
+            end
+        end
     end
-    print("1   1   1\n1 3 2 1 1 5 1",11,1)
-    --fake nonogram
-    rectfill(9,13,9+7*8,13+6*8,5)
-    map(0,0,9,13,7,6)
-    --subtitle
-    local subtitle = {"h","l","t","b"}
-    local x = 64 - #subtitle*4
-    rectfill(x,70,x + #subtitle*8,78,5)
+end
+
+function print_subtitle(y, text)
+    local x = 64 - #text*4
+    rectfill(x,y,x + #text*8,y+8,5)
     local spriten = 0
-    for letter in all(subtitle) do
-        spr(1+spriten*2,x,70)
-        print(letter,x+2,72,0)
+    for letter in all(text) do
+        spr(1+spriten*2,x,y)
+        print(letter,x+2,y+2,0)
         x += 8
         spriten = abs(spriten-1)
     end
-    --pal()
-    --level list
-    local l = 1
-    x = 10
-    y = 85
-    while l <= totalpuzzles do
-        if l == currentpuzzle then
-            print("\23",x-5,y,7)
-        end;
-        if wins[l] == 1 then
-            print("\146",x+8,y,7)
-        elseif wins[l] == 2 then
-            print("\146",x+8,y,9)
-        end
-        print(l,x,y,7)
-        l += 1
-        y += 7
-        if y > 110 then
-            x += 20
-            y = 85
-        end
-    end
-    --credits
-    print("game by uvehj",2,116,7)
-    print("github.com/uvehj/vnonograms",2,122,7)
 end
 
 function draw_win()
