@@ -13,6 +13,7 @@ checkcounter = 30
 totalpuzzles = 24
 currentpuzzle = 1
 cooldown = 0
+band = {objective=30,position=30,defaults={30,-5}, speed=200}
 function _init()
     poke(0x5f2e, 1)
     pal(3, -3, 1)
@@ -55,6 +56,7 @@ function _draw()
     end
 end
 function _update60()
+    update_band()
     if state == 1 then
         update_buttons_game()
         checkcounter -= 1
@@ -67,6 +69,14 @@ function _update60()
         update_buttons_menu()
     elseif state == 2 then
         update_buttons_finish()
+    end
+end
+
+function update_band()
+    if(band.position<band.objective) then
+        band.position = min(band.objective, band.position+(band.speed/60))
+    elseif(band.position>band.objective) then
+        band.position = max(band.objective, band.position-(band.speed/60))
     end
 end
 
@@ -137,13 +147,11 @@ function create_puzzle(position,starttiles,endtiles)
         add(puzzle.columnnumbers,curcolumn)
         x += 1
     end
+
+    band.objective = puzzle.y + (puzzle.height*8) - flr(rnd(puzzle.height*6)) - 20
     return 1
 end
-function draw_creation_error()
-    print("creating puzzle...",1,58,0)
-    print("size might be too big",1,64,0)
-    print("press any button to go back",1,70,0)
-end
+
 function draw_title()
     if menustate == 1 then
         --"nonograms" letter
@@ -175,24 +183,23 @@ function draw_title()
 
     else
         local l = 1
-        x = 10
-        y = 85
-        while l <= totalpuzzles do
+        x = 8
+        y = 45
+        for level in all(get_levels()) do
             if l == currentpuzzle then
                 print("\23",x-5,y,7)
             end;
+            name = "??????"
+            if (wins[l] ~= 0) name = level.name
+            print(name.." by "..level.by,x+7,y,7)
             if wins[l] == 1 then
-                print("\146",x+8,y,7)
+                print("\146",x+9+(#name+#level.by+4)*4,y,7)
             elseif wins[l] == 2 then
-                print("\146",x+8,y,9)
+                print("\146",x+9+(#name+#level.by+4)*4,y,9)
             end
             print(l,x,y,7)
             l += 1
             y += 7
-            if y > 110 then
-                x += 20
-                y = 85
-            end
         end
     end
 end
@@ -220,13 +227,13 @@ function draw_band()
     local band_colors = {8,11,2,3,15,1,12}
     for color in all(band_colors) do
         for i=0,7 do
-            line(0,30+y+i,128,15+y+i,color)
+            line(0,band.position+y+i,128,band.position-15+y+i,color)
             i += 1
         end
         y+=7
     end
-    while y <= 113 do
-        line(0,30+y,128,15+y,12)
+    while y <= 160 do
+        line(0,band.position+y,128,band.position-15+y,12)
        y += 1
     end
 end
@@ -336,23 +343,32 @@ function update_buttons_game()
 end
 
 function update_buttons_menu()
-    if btnp(3) and currentpuzzle<totalpuzzles then
-        currentpuzzle += 1
-        sfx(2)
-    elseif btnp(2) and currentpuzzle > 1 then
-        currentpuzzle -= 1
-        sfx(2)
-    elseif btnp(1) and currentpuzzle + 4 <= totalpuzzles then 
-        currentpuzzle += 4
-        sfx(2)
-    elseif btnp(0) and currentpuzzle - 4 >= 1 then 
-        currentpuzzle -= 4
-        sfx(2)
-    elseif btnp(4) or btnp(5) then
-        sfx(2)
-        state = load_level(currentpuzzle)
+    if(menustate == 1) then
+        if btnp(5) then
+            menustate = 2
+            band.objective= band.defaults[menustate]
+        end
+    else
+        if btnp(4) then
+            menustate = 1
+            band.objective= band.defaults[menustate]
+        elseif btnp(3) and currentpuzzle<totalpuzzles then
+            currentpuzzle += 1
+            sfx(2)
+        elseif btnp(2) and currentpuzzle > 1 then
+            currentpuzzle -= 1
+            sfx(2)
+        elseif btnp(1) and currentpuzzle + 4 <= totalpuzzles then 
+            currentpuzzle += 4
+            sfx(2)
+        elseif btnp(0) and currentpuzzle - 4 >= 1 then 
+            currentpuzzle -= 4
+            sfx(2)
+        elseif btnp(5) then
+            sfx(2)
+            state = load_level(currentpuzzle)
+        end
     end
-
 end
 
 function update_buttons_finish()
