@@ -13,7 +13,7 @@ checkcounter = 30
 totalpuzzles = 24
 currentpuzzle = 1
 cooldown = 0
-band = {objective=30,position=30,defaults={30,-5}, speed=200}
+band = {objective=30,position=30,defaults={30,-75}, speed=600}
 function _init()
     poke(0x5f2e, 1)
     pal(3, -3, 1)
@@ -148,7 +148,7 @@ function create_puzzle(position,starttiles,endtiles)
         x += 1
     end
 
-    band.objective = puzzle.y + (puzzle.height*8) - flr(rnd(puzzle.height*6)) - 20
+    band.objective = puzzle.y + (puzzle.height*8) - flr(rnd(puzzle.height*12)) - 20
     return 1
 end
 
@@ -182,24 +182,29 @@ function draw_title()
         print("by uvehj",96,122,7)
 
     else
-        local l = 1
-        x = 8
-        y = 45
-        for level in all(get_levels()) do
+        local x = 8
+        local y = 15
+        local max_items_on_screen = flr((128-y)/(2*7))
+        local levels = get_levels()
+        local l = min(max(1, currentpuzzle-(max_items_on_screen/2)),#levels-max_items_on_screen+1)
+        if (l > 1) print("\148",62,y-6,7)
+        if (l + max_items_on_screen <= #levels) print("\131",62,122,7)
+        for i=1,max_items_on_screen do
+            level = levels[l]
+            color(7)
+            if (l == currentpuzzle) color(8)
+            print(l,x+1,y)
+            name = "??????"
+            if (wins[l] ~= 0) name = level.name
+            
+            print(name,x+9,y)
+            print("by "..level.by,122-((#"by ")+#level.by-1)*4,y+7)
             if l == currentpuzzle then
                 print("\23",x-5,y,7)
             end;
-            name = "??????"
-            if (wins[l] ~= 0) name = level.name
-            print(name.." by "..level.by,x+7,y,7)
-            if wins[l] == 1 then
-                print("\146",x+9+(#name+#level.by+4)*4,y,7)
-            elseif wins[l] == 2 then
-                print("\146",x+9+(#name+#level.by+4)*4,y,9)
-            end
-            print(l,x,y,7)
+            color()
             l += 1
-            y += 7
+            y += 14
         end
     end
 end
@@ -225,14 +230,16 @@ end
 function draw_band()
     local y = 1
     local band_colors = {8,11,2,3,15,1,12}
+    local band_width = 14
     for color in all(band_colors) do
-        for i=0,7 do
+        for i=0,band_width do
             line(0,band.position+y+i,128,band.position-15+y+i,color)
+            if(band.position+y+i<7) line(63,0,65,0,color)
             i += 1
         end
-        y+=7
+        y+=band_width
     end
-    while y <= 160 do
+    while y <= 240 do
         line(0,band.position+y,128,band.position-15+y,12)
        y += 1
     end
@@ -358,12 +365,6 @@ function update_buttons_menu()
         elseif btnp(2) and currentpuzzle > 1 then
             currentpuzzle -= 1
             sfx(2)
-        elseif btnp(1) and currentpuzzle + 4 <= totalpuzzles then 
-            currentpuzzle += 4
-            sfx(2)
-        elseif btnp(0) and currentpuzzle - 4 >= 1 then 
-            currentpuzzle -= 4
-            sfx(2)
         elseif btnp(5) then
             sfx(2)
             state = load_level(currentpuzzle)
@@ -375,6 +376,7 @@ function update_buttons_finish()
     if btnp(4) or btnp(5) then
         sfx(2)
         state = 0
+        band.objective= band.defaults[menustate]
     end
 end
 
@@ -382,6 +384,7 @@ function update_buttons_error()
     if btnp(4) or btnp(5) then
         sfx(2)
         state = 0
+        band.objective= band.defaults[menustate]
     end
 end
 
