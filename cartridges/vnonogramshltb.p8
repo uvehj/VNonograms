@@ -262,16 +262,13 @@ function draw_board(posx,posy)
     --row numbers
     local ynum = puzzle.y + 2
     for row in all(puzzle.rownumbers) do
-        local xnum = puzzle.x - #row * 6
-        for number in all(row) do
-            if number >= 10 then
-                print(number,xnum-3,ynum,7)
-            else
-                print(number,xnum,ynum,7)
-            end
-            xnum += 6
-            if flr(number/10) > 0 then
-                xnum += 4
+        local xnum = puzzle.x + 1
+        if(#row>0) do
+            for i=#row, 1, -1 do
+                xnum -= 6
+                if (row[i] >= 10) xnum -= 4
+                print(row[i],xnum,ynum,7)
+                i-=1
             end
         end
         ynum += 8
@@ -375,14 +372,6 @@ function update_buttons_menu()
 end
 
 function update_buttons_finish()
-    if btnp(4) or btnp(5) then
-        sfx(2)
-        state = 0
-        band.objective= band.defaults[menustate]
-    end
-end
-
-function update_buttons_error()
     if btnp(4) or btnp(5) then
         sfx(2)
         state = 0
