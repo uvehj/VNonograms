@@ -190,20 +190,25 @@ function draw_title()
         if (l > 1) print("\148",61,y-6,7)
         if (l + max_items_on_screen <= #levels) print("\131",61,122,7)
         for i=1,max_items_on_screen do
+            local x_offset = x-7
+            if wins[l] == 1 then
+                print("\146",x_offset,y,7)
+            elseif wins[l] == 2 then
+                print("\146",x_offset,y,9)
+            end
             level = levels[l]
             color(7)
+            x_offset += 8
+            if (flr(l/10)== 0) x_offset += 4
             if (l == currentpuzzle) color(8)
-            print(l,x+1,y)
+            print(l,x_offset,y)
+            if (flr(l/10)~= 0) x_offset += 4
+            x_offset += 6
             name = "??????"
             if (wins[l] ~= 0) name = level.name
-            
-            print(name,x+9,y)
+            print(name,x_offset,y)
             print("by "..level.by,122-((#"by ")+#level.by-1)*4,y+7)
-            if wins[l] == 1 then
-                print("\146",x-7,y,7)
-            elseif wins[l] == 2 then
-                print("\146",x-7,y,9)
-            end
+            
             color()
             l += 1
             y += 14
@@ -278,7 +283,9 @@ function draw_board(posx,posy)
     for column in all(puzzle.columnnumbers) do
         local ynum = puzzle.y - 1 - #column * 6
         for number in all(column) do
-            print(number,xnum,ynum,7)
+            local offset = 0
+            if (number >= 10) offset -= 2
+            print(number,xnum+offset,ynum,7)
             ynum += 6
         end
         xnum += 8
@@ -462,7 +469,7 @@ function get_levels()
         {map={19,13,31,25},position={24,25},name="rodney",by="matt"},
         {map={7,24,18,35},position={26,27},name="fart",by="bohemu"},
         {map={7,36,18,47},position={24,25},name="tiamat's nap",by="bohemu"},
-        {map={7,48,18,59},position={24,25},name="penne rigate",by="bohemu"}
+        {map={7,48,18,59},position={30,32},name="penne rigate",by="bohemu"}
     }
 end
 __gfx__
