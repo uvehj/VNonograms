@@ -187,8 +187,8 @@ function draw_title()
         local max_items_on_screen = flr((128-y)/(2*7))
         local levels = get_levels()
         local l = min(max(1, currentpuzzle-(max_items_on_screen/2)),#levels-max_items_on_screen+1)
-        if (l > 1) print("\148",62,y-6,7)
-        if (l + max_items_on_screen <= #levels) print("\131",62,122,7)
+        if (l > 1) print("\148",61,y-6,7)
+        if (l + max_items_on_screen <= #levels) print("\131",61,122,7)
         for i=1,max_items_on_screen do
             level = levels[l]
             color(7)
@@ -199,9 +199,11 @@ function draw_title()
             
             print(name,x+9,y)
             print("by "..level.by,122-((#"by ")+#level.by-1)*4,y+7)
-            if l == currentpuzzle then
-                print("\23",x-5,y,7)
-            end;
+            if wins[l] == 1 then
+                print("\146",x-7,y,7)
+            elseif wins[l] == 2 then
+                print("\146",x-7,y,9)
+            end
             color()
             l += 1
             y += 14
