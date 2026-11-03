@@ -205,7 +205,7 @@ function draw_title()
 
     else
         local x = 8
-        local y = 15
+        local y = 11
         local max_items_on_screen = flr((128-y)/(2*7))
         local levels = get_levels()
         local l = min(max(1, currentpuzzle-(max_items_on_screen/2)),#levels-max_items_on_screen+1)
