@@ -1,8 +1,8 @@
 pico-8 cartridge // http://www.pico-8.com
 version 43
 __lua__
---nonograms celebrating pico8
---by uvehj
+--nonograms by the hltb community
+--game by uvehj
 puzzle = {}
 menustate = 1
 state = 0
