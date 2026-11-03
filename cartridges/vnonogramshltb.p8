@@ -538,19 +538,19 @@ function get_levels()
         {map={44,12,55,23},position={30,29},name="toast",by="everdred"},
         {map={117,9,127,17},position={30,40},name="rodney crawl",by="matt"},
         {map={32,0,43,11},position={25,26},name="green starfish",by="green starfish"},
+        {map={19,13,31,25},position={24,25},name="rodney",by="matt"},
         {map={97,34,107,45},position={30,28},name="thank you mr president",by="uvehj"},
         {map={32,33,43,44},position={30,27},name="big baguette",by="marisa"},
         {map={44,24,55,34},position={28,32},name="beastial scam",by="eimon and bohemu"},
         {map={44,35,55,46},position={30,32},name="rip crawly homie",by="uvehj"},
         {map={97,11,107,21},position={27,29},name="penne al dente",by="matt"},
         {map={7,48,18,59},position={30,32},name="penne rigate",by="bohemu"},
-        {map={86,0,96,11},position={34,28},name="exi eye",by="uvehj"},
+        {map={87,12,96,23},position={30,28},name="exi gaze",by="matt"},
         {map={98,22,107,33},position={32,27},name="smart fridge",by="eimon"},
         {map={97,46,107,56},position={30,32},name="exipon",by="uvehj"},
         {map={32,21,43,32},position={30,27},name="say, have you heard about",by="marisa"},
-        {map={19,0,31,12},position={24,25},name="rodney selfie",by="matt"},
-        {map={19,13,31,25},position={24,25},name="rodney",by="matt"},
-        {map={87,12,96,23},position={30,28},name="exi gaze",by="matt"}
+        {map={86,0,96,11},position={34,28},name="exi eye",by="uvehj"},
+        {map={19,0,31,12},position={24,25},name="rodney selfie",by="matt"}
     }
 end
 __gfx__
