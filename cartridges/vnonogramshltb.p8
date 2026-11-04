@@ -30,7 +30,12 @@ function _init()
         i += 1
     end
     menuitem(1, "back to menu", back_to_menu)
-    menuitem(2, "delete progress", delete_progress)
+    menuitem(2, " ", nothing )
+    menuitem(3, "delete progress", delete_progress)
+    menuitem(4, " ", nothing )
+end
+
+function nothing()
 end
 
 function back_to_menu()
@@ -409,12 +414,12 @@ end
 
 function update_buttons_menu()
     if(menustate == 1) then
-        if btnp(5) then
+        if btnp(4) then
             menustate = 2
             band.objective= band.defaults[menustate]
         end
     else
-        if btnp(4) then
+        if btnp(5) then
             menustate = 1
             band.objective= band.defaults[menustate]
         elseif btnp(3) and currentpuzzle<totalpuzzles then
@@ -423,7 +428,7 @@ function update_buttons_menu()
         elseif btnp(2) and currentpuzzle > 1 then
             currentpuzzle -= 1
             sfx(2)
-        elseif btnp(5) then
+        elseif btnp(4) then
             sfx(2)
             state = load_level(currentpuzzle)
         end
@@ -516,27 +521,27 @@ function get_levels()
         {map={117,25,127,29},position={20,40},name="i vote for...",by="uvehj"},
         {map={109,11,116,20},position={35,30},name="stop right there",by="marisa"},
         {map={19,26,30,34},position={30,34},name="roach camera",by="noone"},
-        {map={7,0,18,11},position={20,25},name="bright eyes",by="gabriell"},
+        {map={98,0,106,10},position={35,32},name="trapped under a table",by="dune"},
         {map={117,18,127,24},position={24,25},name="twink sword",by="uvehj"},     
         {map={32,57,43,63},position={30,35},name="gamepad",by="dune"},
         {map={7,36,18,47},position={24,25},name="tiamat's nap",by="bohemu"},
         {map={117,45,126,56},position={35,26},name="tiamat's wrath",by="tiamat"},
-        {map={44,47,55,57},position={28,28},name="omega ruby",by="exi"},
-        {map={108,42,116,53},position={35,25},name="cosmic coalition",by="dune"},
+        {map={44,47,55,57},position={28,28},name="omega ruby",by="exi"},  
         {map={108,36,116,41},position={35,50},name="hollowed rodent",by="uvehj"},
         {map={19,35,30,46},position={26,26},name="dirty!",by="noone"},
         {map={32,45,43,56},position={24,25},name="blow me",by="dune"},
-        {map={98,0,106,10},position={35,32},name="trapped under a table",by="dune"},
         {map={0,6,5,16},position={45,27},name="honeymead",by="uvehj"},
         {map={44,0,55,11},position={25,27},name="bucket of salsa",by="gabriell"},
         {map={117,0,127,8},position={25,40},name="maizy",by="alpha"},
         {map={108,21,116,30},position={30,30},name="toilet",by="marisa"},
         {map={117,35,126,44},position={35,32},name="famed and beloved",by="dune"},
         {map={7,24,18,35},position={26,27},name="fart",by="bohemu"},
+        {map={7,0,18,11},position={20,25},name="bright eyes",by="gabriell"},
         {map={108,31,116,35},position={35,50},name="baguette tip",by="uvehj"},
         {map={7,12,18,23},position={20,25},name="banhammer",by="gctuba"},
         {map={44,12,55,23},position={30,29},name="toast",by="everdred"},
         {map={117,9,127,17},position={30,40},name="rodney crawl",by="matt"},
+        {map={108,42,116,53},position={35,25},name="cosmic coalition",by="dune"},
         {map={32,0,43,11},position={25,26},name="green starfish",by="green starfish"},
         {map={19,13,31,25},position={24,25},name="rodney",by="matt"},
         {map={97,34,107,45},position={30,28},name="thank you mr president",by="uvehj"},
