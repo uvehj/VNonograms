@@ -530,6 +530,7 @@ function get_levels()
         {map={108,36,116,41},position={35,50},name="hollowed rodent",by="uvehj"},
         {map={19,35,30,46},position={26,26},name="dirty!",by="noone"},
         {map={32,45,43,56},position={24,25},name="blow me",by="dune"},
+        {map={107,0,116,10},position={28,28},name="smelly poop",by="bohemu"},
         {map={0,6,5,16},position={45,27},name="honeymead",by="uvehj"},
         {map={44,0,55,11},position={25,27},name="bucket of salsa",by="gabriell"},
         {map={117,0,127,8},position={25,40},name="maizy",by="alpha"},
@@ -555,7 +556,9 @@ function get_levels()
         {map={97,46,107,56},position={30,32},name="exipon",by="uvehj"},
         {map={32,21,43,32},position={30,27},name="say, have you heard about",by="marisa"},
         {map={86,0,96,11},position={34,28},name="exi eye",by="uvehj"},
-        {map={19,0,31,12},position={24,25},name="rodney selfie",by="matt"}
+        {map={32,12,43,20},position={28,28},name="the couch",by="marisa"},
+        {map={19,0,31,12},position={24,25},name="rodney selfie",by="matt"},
+        {map={0,0,6,5},position={30,32},name="thank you for playing!",by="uvehj"}
     }
 end
 __gfx__
