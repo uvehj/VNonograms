@@ -518,7 +518,7 @@ function get_levels()
     return {
         {map={87,24,96,35},position={34,30},name="plain old pine tree",by="alpha"},
         {map={117,30,127,34},position={28,55},name="legally distinct bat",by="eimon"},
-        {map={117,25,127,29},position={20,40},name="i vote for...",by="uvehj"},
+        {map={117,25,127,29},position={29,40},name="i vote for...",by="uvehj"},
         {map={109,11,116,20},position={35,30},name="stop right there",by="marisa"},
         {map={19,26,30,34},position={30,34},name="roach camera",by="noone"},
         {map={98,0,106,10},position={35,32},name="trapped under a table",by="dune"},
