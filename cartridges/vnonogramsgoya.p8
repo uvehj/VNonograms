@@ -3,6 +3,8 @@ version 43
 __lua__
 --nonograms by the hltb community
 --game by uvehj
+debug_select = true
+debug_show = true
 puzzle = {}
 menustate = 1
 state = 0
@@ -49,14 +51,15 @@ function decode_grid(puzzle_string, width, height)
     local grid = {}
 
     --full White or black
-    if puzzle_string == "W" or puzzle_string == "B" then
+    if sub(puzzle_string, 1, 1) == "W" or sub(puzzle_string, 1, 1) == "B" then
         local fill = (puzzle_string == "B") and 1 or 0
+        local trivial = (sub(puzzle_string, 2, 2) == "n") and 0 or 1
         for y = 1, height do
             local r = {}
             for x = 1, width do add(r, fill) end
             add(grid, r)
         end
-        return 1, grid
+        return trivial, grid
     end
 
     local trivial = (sub(puzzle_string, 1, 1) == "t") and 1 or 0
@@ -140,7 +143,7 @@ function draw_all_puzzles(puzzle_list, start_x, draw_selected_puzzle)
         end
         current_y += row[1].height
     end
-    if (draw_selected_puzzle==true) rect(selected[1],selected[2],selected[3],selected[4], 8)
+    if (draw_selected_puzzle==true) rect(selected[1]-1,selected[2]-1,selected[3]+1,selected[4]+1, 8)
 end
 
 function _draw()
@@ -325,8 +328,6 @@ end
 
 function draw_win()
     print("puzzle finished! mistakes: "..tostr(puzzle.mistakes),1,1,7)
-    print(level.name,1,8,7)
-    print("by "..level.by,6,15,7)
 end
 
 function draw_band()
@@ -483,23 +484,26 @@ function update_buttons_menu()
     elseif(menustate == 3) then
         if btnp(5) then
             menustate = 2
-        elseif btnp(3) and currentpuzzle[1]<#images[currentimage][2] then
+        elseif btnp(3) then
             currentpuzzle[1] += 1
             sfx(2)
-        elseif btnp(2) and currentpuzzle[1] > 1 then
-            currentpuzzle[1] -= 1
-            sfx(2)
-        elseif btnp(1) and currentpuzzle[2]<#images[currentimage][1] then
-            currentpuzzle[2] += 1
-            sfx(2)
-        elseif btnp(0) and currentpuzzle[2] > 1 then
-            currentpuzzle[2] -= 1
-            sfx(2)
+
         elseif btnp(4) then
             sfx(2)
             cooldown = 0.5
             cursorpos = {0,0}
             state = create_puzzle()
+        elseif debug_select == true then
+            if btnp(2) and currentpuzzle[1] > 1 then
+                currentpuzzle[1] -= 1
+                sfx(2)
+            elseif btnp(1) then
+                currentpuzzle[2] += 1
+                sfx(2)
+            elseif btnp(0) and currentpuzzle[2] > 1 then
+                currentpuzzle[2] -= 1
+                sfx(2)
+            end
         end
     end
 end
@@ -575,15 +579,15 @@ end
 
 function get_level1()
     return {
-        {8,6,"B","B","B","B","B","B","B","B","B","B","n3f/3f/3f/1f/f/2f/2f/3f","n3f/3b/3f/3f/3f/3b/3d/1f","t3f/3f/3f/3f/3f/3f/f/2f","B","B","B","B","B","B","B"},
-        {6,10,"B","B","B","B","B","t3ff/3ff/3ff/3fe/3fe/3fc","n2e7/1af/3ff/3db/3ee/3df","t3bf/3ff/3ff/3ff/37f/ff","B","B","B","B"},
-        {9,8,"B","B","B","B","B","B","nff/ff/ff/ff/fe/fe/fd/fc/f8","ndf/9b/1e/77/bf/bf/5f/9f/bf","ndf/ff/cf/ff/a7/3f/ff/bb/e4","tff/bf/7f/ff/ff/ef/ff/df/ff","B","B","B","B","B"},
+        {8,6,"B","B","B","B","B","B","B","B","B","B","n3f/3f/3f/1f/f/2f/2f/3f","n3f/3b/3f/3f/3f/3b/3d/1f","n3f/3f/3f/3f/3f/3f/f/2f","B","B","B","B","B","B","B"},
+        {6,10,"B","B","B","B","B","n3ff/3ff/3ff/3fe/3fe/3fc","n2e7/1af/3ff/3db/3ee/3df","n3bf/3ff/3ff/3ff/37f/ff","B","B","B","B"},
+        {9,8,"B","B","B","B","B","B","nff/ff/ff/ff/fe/fe/fd/fc/f8","ndf/9b/1e/77/bf/bf/5f/9f/bf","ndf/ff/cf/ff/a7/3f/ff/bb/e4","nff/bf/7f/ff/ff/ef/ff/df/ff","B","B","B","B","B"},
         {7,10,"B","B","B","B","B","n393/365/387/207/307/20f/f","n3ff/3ef/3ef/3cd/3cf/3cb/18f","n21f/24f/30f/25f/2c7/297/2b7","B","B","B","B"},
-        {6,5,"B","B","B","B","B","B","B","B","B","n1f/1e/1f/1c/1c/18","n0/13/2/12/2/5","t1f/d/1f/1f/1f/1d","n1c/1c/18/10/10/10","t1f/1f/1f/1f/1d/1f","n8/1a/15/a/11/11","n7/f/f/f/7/17","B","B","B","B","B","B","B","B"},
-        {5,10,"B","n3f8/3f9/3f8/3f9/3fc","t3ff/ff/1ff/3ff/3ff","B","n3f0/3e5/3e0/3de/3f9","n1bf/3f/37e/21e/b4","n9e/9e/21f/be/1f","n3c3/393/375/3c1/3e3","B","B","B","B"},
+        {6,5,"B","B","B","B","B","B","B","B","B","n1f/1e/1f/1c/1c/18","n0/13/2/12/2/5","n1f/d/1f/1f/1f/1d","n1c/1c/18/10/10/10","n1f/1f/1f/1f/1d/1f","n8/1a/15/a/11/11","n7/f/f/f/7/17","B","B","B","B","B","B","B","B"},
+        {5,10,"B","n3f8/3f9/3f8/3f9/3fc","n3ff/ff/1ff/3ff/3ff","B","n3f0/3e5/3e0/3de/3f9","n1bf/3f/37e/21e/b4","n9e/9e/21f/be/1f","n3c3/393/375/3c1/3e3","B","B","B","B"},
         {8,5,"B","B","B","t1e/1f/1f/1f/1f/1f/1f/1f","nf/f/15/11/19/18/1b/1f","n1f/1f/1e/0/0/0/1f/1f","n1f/1c/0/0/0/0/0/1c","n1f/0/0/0/0/0/0/f","n1c/0/0/0/0/1/1b/1f","n0/0/0/9/0/1e/17/17","n2/3/15/11/7/7/3/1f","n18/a/18/18/10/10/0/8","n0/4/5/0/11/11/13/3","B","n1e/18/1a/18/1e/1a/18/1c","n11/10/13/12/10/3/8/0","n1f/f/1f/1f/a/1f/d/3","B","t1f/1f/1f/1f/1f/1f/1f/10","t1f/1f/1f/1f/1f/1f/1f/7","B","B","B","B"},
         {6,6,"B","B","B","B","n3e/38/30/20/20/20","n1f/6/0/4/b/4","n27/5/3/1/0/0","n3f/3f/25/1f/35/3f","n37/22/36/3f/33/35","n0/0/31/0/10/0","n27/1f/3f/f/f/f","B","n28/30/31/3c/3e/20","n31/31/21/1/7/27","n3e/3e/3c/3c/3c/38","W","n7/7/f/7/f/17","B","B","B"},
-        {7,6,"B","B","B","B","n20/30/38/38/3c/3c/3e","n2/0/1/3/3/0/0","n0/0/0/0/0/24/c","nf/f/0/0/0/0/0","n3d/3b/0/0/0/0/0","t0/0/0/0/1/1/0","n1f/3d/3f/1f/3e/24/34","n3c/3c/30/0/0/0/0","t0/0/0/0/1/0/0","t7/0/0/0/0/0/0","n30/20/0/4/1/1b/0","ne/e/1f/1f/f/0/0","nf/7/7/3/1/0/0","n3f/3f/3f/3f/10/0/0","n3f/3f/3f/3f/0/0/0","t3f/3f/3f/3f/3f/3f/1d"},
+        {7,6,"B","B","B","B","n20/30/38/38/3c/3c/3e","n2/0/1/3/3/0/0","n0/0/0/0/0/24/c","nf/f/0/0/0/0/0","n3d/3b/0/0/0/0/0","n0/0/0/0/1/1/0","n1f/3d/3f/1f/3e/24/34","n3c/3c/30/0/0/0/0","n0/0/0/0/1/0/0","n7/0/0/0/0/0/0","n30/20/0/4/1/1b/0","ne/e/1f/1f/f/0/0","nf/7/7/3/1/0/0","n3f/3f/3f/3f/10/0/0","n3f/3f/3f/3f/0/0/0","n3f/3f/3f/3f/3f/3f/1d"},
         {6,5,"n18/1b/1b/1d/1c/1f","n1f/4/1c/13/1c/1d","n1f/7/0/0/0/1f","n1f/1f/0/0/0/1b","n1f/10/0/0/0/9","n1e/0/0/0/0/10","n0/0/0/0/0/1d","na/f/e/f/1e/1f","n10/18/18/18/18/18","W","W","W","n18/12/0/4/a/0","n0/0/4/d/f/1f","t0/0/0/0/10/10","W","n0/c/c/c/1c/1f","t0/1/1/0/0/1","n0/a/b/2/13/17","n0/10/1f/1f/1f/1f","n0/1/1f/1f/1f/1f","n0/1f/1f/1f/1f/1f","n18/1e/1f/1f/1f/1f","nf/f/7/17/1f/1d"},
         {6,5,"B","B","B","B","n1a/1f/1f/1e/1e/1e","n1a/1c/10/4/4/0","t10/0/0/1/0/4","n1e/7/3/a/6/0","n18/10/10/0/0/0","W","n0/0/0/7/d/16","n0/0/18/1a/5/7","n3/3/1/b/17/b","t1b/1b/1f/1f/1f/1f","n18/10/10/1c/1b/1b","n0/1/0/1/f/1b","t1f/1f/1d/1f/1b/1e","n7/19/1f/1f/1f/1f","t1f/1f/1f/1f/1b/1f","n1f/18/1c/1f/1e/1f","n1f/0/0/0/12/13","n11/0/7/7/7/17","B","B"},
         {5,6,"B","B","B","n3f/3e/3d/3d/3d","n0/20/20/30/20","t10/0/1/2/0","t8/10/4/0/0","t0/0/0/0/3","n7/7/17/3f/3f","n1c/3e/3f/1c/38","n36/24/30/0/1","n1f/1f/f/f/3f","n1f/3f/3f/2f/4","n39/1d/35/27/17","t3f/3f/2b/37/3f","t3f/3f/3f/3d/3f","t3f/3f/3f/3f/3d","t1d/1f/3f/3f/3f","B","B"},
