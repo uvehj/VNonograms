@@ -3,13 +3,11 @@ version 43
 __lua__
 --nonograms by the hltb community
 --game by uvehj
-debug_select = true
-debug_show = true
+debug_select = false
 puzzle = {}
 menustate = 1
 state = 0
 cursorpos = {0,0}
-wins = {}
 checkcounter = 30
 currentpuzzle = {1,1}
 currentimage = 1
@@ -17,12 +15,18 @@ cooldown = 0
 menucamera = {objective=-128,position=-128, speed=600}
 band = {objective=30,position=30,defaults={30,-75}, speed=600}
 images = {}
+last_beaten = {0,0,0}
 function _init()
     images[1] = load_all_puzzles(get_level1())
     images[2] = load_all_puzzles(get_level2())
     images[3] = load_all_puzzles(get_level3())
     state = 0
     cartdata("uvehjvnonogramsgoya")
+    local i = 1
+    while i <= #images do
+        last_beaten[i] = dget(i)
+        i += 1
+    end
     menuitem(1, "back to menu", back_to_menu)
     menuitem(2, " ", nothing )
     menuitem(3, "delete progress", delete_progress)
@@ -103,8 +107,9 @@ function load_all_puzzles(puzzle_strings)
     return unpacked
 end
 
-function draw_all_puzzles(puzzle_list, start_x, draw_selected_puzzle)
+function draw_all_puzzles(image_id, start_x, draw_selected_puzzle)
 
+    local puzzle_list = images[image_id]
     local current_y = 0
 
     line(start_x+3,0,start_x+3,128,7)
@@ -117,33 +122,41 @@ function draw_all_puzzles(puzzle_list, start_x, draw_selected_puzzle)
     rect(start_x+124, 125, start_x+126, 127, 7)
 
     selected ={0,0,0,0}
+    local puzzle_counter = 0
+    rectfill(start_x+4, 0, start_x+123, 128, 5)
 
     for x=1, #puzzle_list do
         local row = puzzle_list[x]
         local current_x = start_x+4
+        local_reached_beaten = false
 
-        for y=1, #row do
+        for y=1, #row do 
             local puzzle = row[y]
+            if(puzzle.trivial == 1) last_beaten[image_id] = max(puzzle_counter + 1, last_beaten[image_id])
+            if(draw_selected_puzzle == true and puzzle_counter==last_beaten[image_id] and debug_select==false) then
+                currentpuzzle[1] = x
+                currentpuzzle[2] = y
+            end
+            
             if(currentpuzzle[1] == x and currentpuzzle[2] == y)selected = {current_x, current_y, current_x + puzzle.width-1, current_y + puzzle.height-1}
-            if(current_x + puzzle.width > menucamera.position) then
-                if puzzle.trivial ~= 0 or false then
-                    for py = 1, puzzle.height do
-                        for px = 1, puzzle.width do
-                            local pixel = puzzle.grid[py][px]
-                            local col = (pixel == 1) and 0 or 7
-                            pset(current_x + px - 1, current_y + py - 1, col)
-                        end
-                    end
-                else
-                    rectfill(current_x, current_y, current_x + puzzle.width-1, current_y + puzzle.height-1, 5)
+            if(debug_select == false and puzzle_counter==last_beaten[image_id])then
+                local_reached_beaten = true
+                break
+            end
+            for py = 1, puzzle.height do
+                for px = 1, puzzle.width do
+                    local pixel = puzzle.grid[py][px]
+                    local col = (pixel == 1) and 0 or 7
+                    pset(current_x + px - 1, current_y + py - 1, col)
                 end
             end
             current_x += puzzle.width
-            if (current_x > menucamera.position + 128) break
+            puzzle_counter+=1
         end
+        if(local_reached_beaten == true) break
         current_y += row[1].height
     end
-    if (draw_selected_puzzle==true) rect(selected[1]-1,selected[2]-1,selected[3]+1,selected[4]+1, 8)
+    if (draw_selected_puzzle==true and selected~={0,0,0,0}) rect(selected[1]-1,selected[2]-1,selected[3]+1,selected[4]+1, 8)
 end
 
 function _draw()
@@ -185,6 +198,7 @@ function _update60()
 end
 
 function update_camera()
+    menucamera.objective = -256 + (128*currentimage)
     if(menucamera.position<menucamera.objective) then
         menucamera.position = min(menucamera.objective, menucamera.position+(menucamera.speed/60))
     elseif(menucamera.position>menucamera.objective) then
@@ -303,12 +317,12 @@ function draw_title()
 
     elseif (menustate == 2)then 
         camera(menucamera.position,0)
-        if(menucamera.position<0) draw_all_puzzles(images[1], -128, false)
-        if(menucamera.position>-128 and menucamera.position<128) draw_all_puzzles(images[2], 0, false)
-        if(menucamera.position>0)draw_all_puzzles(images[3], 128, false)
+        if(menucamera.position<0) draw_all_puzzles(1, -128, false)
+        if(menucamera.position>-128 and menucamera.position<128) draw_all_puzzles(2, 0, false)
+        if(menucamera.position>0)draw_all_puzzles(3, 128, false)
     elseif (menustate == 3)then
         camera(menucamera.position,0)
-        draw_all_puzzles(images[currentimage], 0, true)
+        draw_all_puzzles(currentimage, 0, true)
     end
 end
 
@@ -474,20 +488,14 @@ function update_buttons_menu()
         elseif btnp(5) then
             menustate = 1
         elseif btnp(0) then --left
-            menucamera.objective -= 128
             currentimage = max(1, currentimage-1)
         elseif btnp(1) then --right
-            menucamera.objective += 128
             currentimage = min(#images, currentimage+1)
         end
-        menucamera.objective = min(128,max(menucamera.objective,-128))
     elseif(menustate == 3) then
         if btnp(5) then
             menustate = 2
-        elseif btnp(3) then
-            currentpuzzle[1] += 1
-            sfx(2)
-
+            menucamera.position = -258 + (128*currentimage)
         elseif btnp(4) then
             sfx(2)
             cooldown = 0.5
@@ -502,6 +510,9 @@ function update_buttons_menu()
                 sfx(2)
             elseif btnp(0) and currentpuzzle[2] > 1 then
                 currentpuzzle[2] -= 1
+                sfx(2)
+            elseif btnp(3) then
+                currentpuzzle[1] += 1
                 sfx(2)
             end
         end
@@ -564,12 +575,8 @@ function check_finished_and_autocomplete()
     end
     if finished == true then
         sfx(3)
-        if puzzle.mistakes == 0 then
-            wins[currentpuzzle] = max(2,wins[currentpuzzle])
-        else
-            wins[currentpuzzle] = max(1,wins[currentpuzzle])
-        end
-        dset(currentpuzzle,wins[currentpuzzle])
+        last_beaten[currentimage] +=1
+        dset(currentimage,last_beaten[currentimage])
         cooldown = 1
         return 2
     else
