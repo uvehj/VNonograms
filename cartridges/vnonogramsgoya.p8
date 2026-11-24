@@ -317,9 +317,13 @@ function draw_title()
 
     elseif (menustate == 2)then 
         camera(menucamera.position,0)
-        if(menucamera.position<0) draw_all_puzzles(1, -128, false)
-        if(menucamera.position>-128 and menucamera.position<128) draw_all_puzzles(2, 0, false)
-        if(menucamera.position>0)draw_all_puzzles(3, 128, false)
+        local image_x = -128
+        for i=1, #images do
+            if (abs(menucamera.position - image_x) <= 128) then --they overlap
+                draw_all_puzzles(i, image_x, false)
+            end
+            image_x +=128
+        end
     elseif (menustate == 3)then
         camera(menucamera.position,0)
         draw_all_puzzles(currentimage, 0, true)
