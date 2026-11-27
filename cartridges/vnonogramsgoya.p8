@@ -340,7 +340,7 @@ function draw_title()
             print(row,1,y,7)
             y += 8
         end
-        print("1   1   1\n1 3 2 1 1 5 1",11,1)
+        print("    1   1\n1 3 2 1 1 5 1",11,1)
         --fake nonogram
         rectfill(9,13,10+7*8,14+6*8,5)
         map(0,0,9,13,7,6)
